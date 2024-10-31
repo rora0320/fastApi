@@ -2,7 +2,7 @@ from typing import Optional, List
 from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+from fastapi.staticfiles import StaticFiles
 
 import json
 
@@ -10,6 +10,8 @@ from starlette.responses import StreamingResponse
 
 app = FastAPI()
 
+# 정적 파일 내보내기
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # CORS 설정
 origins = [
