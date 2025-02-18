@@ -1,0 +1,28 @@
+[
+    {
+        "filename": "Elan_9.PDF",
+        "car": "1234",
+        "menu": [
+            {
+                "title": "123",
+                "page": 3,
+                "icon": "./image/features_of_your_vehicle.svg",
+                "submenu": [
+                    {
+                        "title": "22222",
+                        "page": 1,
+                        "icon": null,
+                        "submenu": [
+                            {
+                                "title": "33333",
+                                "page": 3,
+                                "icon": null,
+                                "submenu": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

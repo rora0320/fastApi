@@ -3,19 +3,25 @@ from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 import json
 
-from starlette.responses import StreamingResponse
+from starlette.responses import StreamingResponse, Response
+
+#한글인코딩
+import urllib.parse
+
 
 app = FastAPI()
 
 # 정적 파일 내보내기
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_path = Path(__file__).parent / "static"
+app.mount("/static", StaticFiles(directory=static_path), name="static")
 
 # CORS 설정
 origins = [
-    "http://localhost:5173",  # 허용할 출처를 추가하세요
+    "http://localhost:8000",  # 허용할 출처를 추가하세요
 ]
 
 app.add_middleware(
@@ -57,6 +63,9 @@ async def receive_and_save_data(body: str = Form(...) , files: List[UploadFile] 
             file.write(await uploaded_file.read())
 
     file_path="data.zip"
+    file_name="한글이 깨지는가.zip"
+
+    encoded_value = urllib.parse.quote(file_name)
 
     def file_iterator():
         with open(file_path, "rb") as file:
@@ -65,12 +74,17 @@ async def receive_and_save_data(body: str = Form(...) , files: List[UploadFile] 
     return StreamingResponse(
         file_iterator(),
         media_type="application/octet-stream",  # blob을 위한 MIME 타입
-        headers={"Content-Disposition": "attachment; filename=data.zip"})  # 다운로드 파일명 설정
+        headers={"Content-Disposition": f"attachment; filename={encoded_value}"})  # 다운로드 파일명 설정
 
     # # 저장 확인 응답
     # return JSONResponse(content={"status": "success", "message": "Data received and saved successfully"})
 
+@app.get("/blob")
+async def read_blob():
+    with open("test.zip", "rb") as pdf_file:
+        pdf_data = pdf_file.read()
+    return Response(content=pdf_data, media_type="application/zip")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
