@@ -5,7 +5,11 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('static', 'static')],
+    datas=[
+    ('static', 'static'),
+    ('build_copy.sh', '.'),
+    ('build_copy.bat', '.')
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
